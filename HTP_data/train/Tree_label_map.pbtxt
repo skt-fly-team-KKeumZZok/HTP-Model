@@ -1,0 +1,35 @@
+item {
+    name: "Branch",
+    id: 1,
+    display_name: "Branch"
+}
+item {
+    name: "Fruit",
+    id: 2,
+    display_name: "Fruit"
+}
+item {
+    name: "Rootdown",
+    id: 3,
+    display_name: "Rootdown"
+}
+item {
+    name: "Rootup",
+    id: 4,
+    display_name: "Rootup"
+}
+item {
+    name: "Slub",
+    id: 5,
+    display_name: "Slub"
+}
+item {
+    name: "Tree",
+    id: 6,
+    display_name: "Tree"
+}
+item {
+    name: "Trunk",
+    id: 7,
+    display_name: "Trunk"
+}
