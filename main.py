@@ -26,14 +26,13 @@ def draw_result_index(h_output, t_output, p_output):
     
     return output_index
 
-'''
 # type1 = [house_size_value, head_size_value, nose_size_value, window_size_value, chimney_value, nose_value]
 # type2 = [root_exist_value, slub_exist_value, legs_exist_value]
 # type3 = [tree_size_value, trunk_size_value, nose_size_value]
 
-h_output, h_keyword, h_sentence, house_size_value, window_size_value, chimney_value = house_output.house_print('test_images/house/reshape_test3.jpg')
-t_output, t_keyword, t_sentence, root_exist_value, slub_exist_value, tree_size_value, trunk_size_value = tree_output.tree_print('test_images/tree/reshape_tree1.jpg')
-p_output, p_keyword, p_sentence, head_size_value, nose_value, legs_exist_value, nose_size_value = person_output.person_print('test_images\person\KakaoTalk_20230218_140105547.jpg')
+h_output, h_keyword, h_sentence, house_size_value, window_size_value, chimney_value = house_output.house_print('test_images/house/1_house.jpg')
+t_output, t_keyword, t_sentence, root_exist_value, slub_exist_value, tree_size_value, trunk_size_value = tree_output.tree_print('test_images/tree/1_tree.jpg')
+p_output, p_keyword, p_sentence, head_size_value, nose_value, legs_exist_value, nose_size_value = person_output.person_print('test_images/person/1_person.jpg')
 
 def get_keyword(output):
     keyword_list = list(set(output))
@@ -48,6 +47,7 @@ def get_keyword(output):
     return keyword_result
 
 get_keyword(h_keyword+t_keyword+p_keyword)
+print(tree_size_value, trunk_size_value, nose_size_value)
 
 #--------fuzzy output--------#
 f_type1 = fuzzy.fuzzy_type1()
@@ -174,7 +174,4 @@ async def main_test(user_id:int):
 
     return result
 
-
-
-
-    
+'''
