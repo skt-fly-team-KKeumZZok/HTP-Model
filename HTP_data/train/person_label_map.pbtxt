@@ -1,0 +1,50 @@
+item {
+    name: "ears",
+    id: 1,
+    display_name: "ears"
+}
+item {
+    name: "eyes",
+    id: 2,
+    display_name: "eyes"
+}
+item {
+    name: "foot",
+    id: 3,
+    display_name: "foot"
+}
+item {
+    name: "head",
+    id: 4,
+    display_name: "head"
+}
+item {
+    name: "legs",
+    id: 5,
+    display_name: "legs"
+}
+item {
+    name: "mouth_close",
+    id: 6,
+    display_name: "mouth_close"
+}
+item {
+    name: "mouth_open",
+    id: 7,
+    display_name: "mouth_open"
+}
+item {
+    name: "mouth_teeth",
+    id: 8,
+    display_name: "mouth_teeth"
+}
+item {
+    name: "nose",
+    id: 9,
+    display_name: "nose"
+}
+item {
+    name: "person",
+    id: 10,
+    display_name: "person"
+}
