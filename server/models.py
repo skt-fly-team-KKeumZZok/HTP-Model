@@ -83,3 +83,10 @@ class DRAW_RESULT(Base):
 
     idx: Column(Integer, Primary_key=True)
     sentence: Column(Text)
+
+class KEYWORD(Base):
+    __tablename__ = "keyword"
+
+    userid: Column(Integer, ForeignKey("user.userid", ondelete="CASCADE", onupdate="CASCADE"))
+    day: Column(date, ForeignKey("user_testday.day", ondelete="CASCADE", onupdate="CASCADE"))
+    keyword_index: Column(VARCHAR(10))

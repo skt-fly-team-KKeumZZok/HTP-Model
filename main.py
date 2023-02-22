@@ -26,15 +26,6 @@ def draw_result_index(h_output, t_output, p_output):
     
     return output_index
 
-'''
-# type1 = [house_size_value, head_size_value, nose_size_value, window_size_value, chimney_value, nose_value]
-# type2 = [root_exist_value, slub_exist_value, legs_exist_value]
-# type3 = [tree_size_value, trunk_size_value, nose_size_value]
-
-h_output, h_keyword, h_sentence, house_size_value, window_size_value, chimney_value = house_output.house_print('test_images/house/reshape_test3.jpg')
-t_output, t_keyword, t_sentence, root_exist_value, slub_exist_value, tree_size_value, trunk_size_value = tree_output.tree_print('test_images/tree/reshape_tree1.jpg')
-p_output, p_keyword, p_sentence, head_size_value, nose_value, legs_exist_value, nose_size_value = person_output.person_print('test_images\person\KakaoTalk_20230218_140105547.jpg')
-
 def get_keyword(output):
     keyword_list = list(set(output))
     keyword_result = []
@@ -47,7 +38,15 @@ def get_keyword(output):
 
     return keyword_result
 
-get_keyword(h_keyword+t_keyword+p_keyword)
+
+'''
+# type1 = [house_size_value, head_size_value, nose_size_value, window_size_value, chimney_value, nose_value]
+# type2 = [root_exist_value, slub_exist_value, legs_exist_value]
+# type3 = [tree_size_value, trunk_size_value, nose_size_value]
+
+h_output, h_keyword, h_sentence, house_size_value, window_size_value, chimney_value = house_output.house_print('test_images/house/reshape_test3.jpg')
+t_output, t_keyword, t_sentence, root_exist_value, slub_exist_value, tree_size_value, trunk_size_value = tree_output.tree_print('test_images/tree/reshape_tree1.jpg')
+p_output, p_keyword, p_sentence, head_size_value, nose_value, legs_exist_value, nose_size_value = person_output.person_print('test_images\person\KakaoTalk_20230218_140105547.jpg')
 
 #--------fuzzy output--------#
 f_type1 = fuzzy.fuzzy_type1()
@@ -80,10 +79,10 @@ db = conn.cursor()
 async def create_upload_file(image: UploadFile = File(...)):
     contents = await image.read()
     with Image.open(io.BytesIO(contents)) as img:
-        img = img.convert("RGB")  # 비트맵 이미지를 RGB 이미지로 변환
+        img = img.convert("RGB") 
         day = datetime.now().date()
-        save_path = os.path.join(os.path.expanduser("~"), "test_images", "image_house_" + str(day) + ".jpg")  # 현재 작업 디렉토리에 파일 저장
-        img.save(save_path, "JPEG")  # JPEG 파일 형식으로 저장
+        save_path = os.path.join(os.path.expanduser("~"), "server", "test_images", "image_house_" + str(day) + ".jpg")  
+        img.save(save_path, "JPEG")  
     return {"filename" : image.filename}
 
 @app.post("/uploadfiletree")
@@ -92,7 +91,7 @@ async def create_upload_file(image: UploadFile = File(...)):
     with Image.open(io.BytesIO(contents)) as img:
         img = img.convert("RGB") 
         day = datetime.now().date()
-        save_path = os.path.join(os.path.expanduser("~"), "test_images", "image_tree" + str(day) + ".jpg")  
+        save_path = os.path.join(os.path.expanduser("~"), "server", "test_images", "image_tree" + str(day) + ".jpg")  
         img.save(save_path, "JPEG")  
     return {"filename" : image.filename}
 
@@ -102,7 +101,7 @@ async def create_upload_file(image: UploadFile = File(...)):
     with Image.open(io.BytesIO(contents)) as img:
         img = img.convert("RGB")  
         day = datetime.now().date()
-        save_path = os.path.join(os.path.expanduser("~"), "test_images", "image_person" + str(day) + ".jpg") 
+        save_path = os.path.join(os.path.expanduser("~"), "server", "test_images", "image_person" + str(day) + ".jpg") 
         img.save(save_path, "JPEG")  
     return {"filename" : image.filename}
 
@@ -115,33 +114,32 @@ async def main_test(user_id:int):
         db.execute(sql_id)
         db_id = db.fetchall()
             
-        # db:USER에 저장된 userid인지 확인
-        user_list = []
-        for i in range(len(db_id)):
-            user_list.append(db_id[i][0])
+        # # db:USER에 저장된 userid인지 확인
+        # user_list = []
+        # for i in range(len(db_id)):
+        #     user_list.append(db_id[i][0])
 
-        
-        if userid not in user_list:
-            return "찾을 수 없는 ID입니다."
+        if userid != 1:
+           return "아이디가 틀렸습니다."
 
         # 테스트 한 날짜를 db:USER_TESTDAY에 저장
         day = datetime.now().date()
 
-        sql_date = f"INSERT INTO USER_TESTDAY VALUES(\"{userid}\", \"{day}\");"
+        # sql_date = f"INSERT INTO USER_TESTDAY VALUES(\"{userid}\", \"{day}\");"
+        sql_date = f"UPDATE USER_TESTDAY SET day = '{day}' WHERE userid = {user_id};"
         db.execute(sql_date)
         conn.commit()
         # conn.close()
 
         # img를 서버에 /test_image 폴더에 저장하기
-        # h_img = 'test_images/house/image_house_' + str(day) + '.jpg'
-        # t_img = 'test_images/tree/image_tree_' + str(day) + '.jpg'
-        # p_img = 'test_images/person/image_person_' + str(day) + '.jpg'
-        h_img = 'test_images/house/reshape_test1.jpg'
-        t_img = 'test_images/person/test3.JPG'
-        p_img = 'test_images/tree/reshape_tree2.jpg'
+        h_img = 'server/test_images/house/image_house_' + str(day) + '.jpg'
+        t_img = 'server/test_images/tree/image_tree_' + str(day) + '.jpg'
+        p_img = 'server/test_images/person/image_person_' + str(day) + '.jpg'
+        # h_img = 'test_images/house/reshape_test7.jpg'
+        # t_img = 'test_images/person/test3.JPG'
+        # p_img = 'test_images/tree/reshape_tree4.jpg'
         
-
-        # model의 input으로 img경로를 넣어서 실행시키기
+        # model 실행
         h_output, h_keyword, h_sentence, house_size_value, window_size_value, chimney_value = house_output.house_print(h_img)
         t_output, t_keyword, t_sentence, root_exist_value, slub_exist_value, tree_size_value, trunk_size_value = tree_output.tree_print(t_img)
         p_output, p_keyword, p_sentence, head_size_value, nose_value, legs_exist_value, nose_size_value = person_output.person_print(p_img)
@@ -152,7 +150,14 @@ async def main_test(user_id:int):
         type2_result = f_type2.make_decision(root_exist_value, slub_exist_value, legs_exist_value)
         f_type3 = fuzzy.fuzzy_type3()
         type3_result = f_type3.make_decision(tree_size_value, trunk_size_value, nose_size_value)
-
+        
+        # db:KEYWORD에 결과 넣기
+        keyword = get_keyword(h_keyword+t_keyword+p_keyword)
+        # sql_keyword = f"INSERT INTO KEYWORD VALUES(\"{userid}\", \"{day}\", \"{keyword}\");"
+        sql_keyword = f"UPDATE KEYWORD SET keyword_index = '{keyword}' WHERE userid = {user_id} AND day = '{day}';"
+        db.execute(sql_keyword)
+        conn.commit()
+        
         # model의 output 중 reult_report_index의 값으로 db:RAW_RESULT 값을 가져와 result라는 변수로 저장
         result_index = draw_result_index(h_output, t_output, p_output)
         
@@ -162,21 +167,22 @@ async def main_test(user_id:int):
 
         db_result = ''
         for i in result_index:
-            if draw_report[i][0]:
-                db_result += draw_report[i][0]
+            if draw_report[i-1][0]:
+                db_result += draw_report[i-1][0]
 
 
-        # db:DRAW_REPORT에 model의 결과 다 넣기
-        sql_report= f"INSERT INTO DRAW_REPORT VALUES(\"{userid}\", \"{day}\", \"{h_img}\", \"{t_img}\", \"{p_img}\", \"{db_result}\", \"{h_sentence}\", \"{t_sentence}\", \"{p_sentence}\", \"{type1_result}\", \"{type2_result}\", \"{type3_result}\");"
+        # db:DRAW_REPORT에 model의 결과 넣기
+        # sql_report= f"INSERT INTO DRAW_REPORT VALUES(\"{userid}\", \"{day}\", \"{h_img}\", \"{t_img}\", \"{p_img}\", \"{db_result}\", \"{h_sentence}\", \"{t_sentence}\", \"{p_sentence}\", \"{type1_result}\", \"{type2_result}\", \"{type3_result}\");"
+        sql_report= f"UPDATE DRAW_REPORT SET house_img = '{h_img}', tree_img = '{t_img}', person_img = '{p_img}', result = '{db_result}', house_text = '{h_sentence}', tree_text = '{t_sentence}', person_text = '{p_sentence}', f_type1 = {type1_result}, f_type2 = {type2_result}, f_type3 = {type3_result} WHERE userid = {user_id} AND day = '{day}';"
         db.execute(sql_report)
         conn.commit()
         # conn.close()
 
-        sql = f"SELECT * FROM DRAW_REPORT WHERE userid={userid} AND day='{day}';"
+        sql = f"SELECT * FROM DRAW_REPORT WHERE userid = {userid} AND day = '{day}';"
         db.execute(sql)
 
         result = db.fetchall()
-        
+
     finally:
         conn.close()
 
