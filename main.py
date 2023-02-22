@@ -64,7 +64,7 @@ print('house_keyword: ', h_keyword, 'tree_keyword: ', t_keyword, 'person_keyword
 #---------------------server----------------------#
 import os, io, json, pymysql
 from fastapi import FastAPI, HTTPException, File, UploadFile
-from datetime import datetime
+from datetime import datetime, date
 # from server.models import *
 from typing import List
 from uuid import UUID 
@@ -178,15 +178,21 @@ async def main_test(user_id:int):
         conn.commit()
         # conn.close()
 
-        sql = f"SELECT * FROM DRAW_REPORT WHERE userid = {userid} AND day = '{day}';"
-        db.execute(sql)
-
-        result = db.fetchall()
-
     finally:
         conn.close()
 
+    # return result
+
+@app.post("/report/{user_id}/{testday}")
+async def show_report(user_id:int, testday:date):
+    userid = user_id
+    day = testday
+    sql = f"SELECT * FROM DRAW_REPORT WHERE userid = {userid} AND day = '{testday}';"
+    db.execute(sql)
+    result = db.fetchall()
+
     return result
+
 
 
 

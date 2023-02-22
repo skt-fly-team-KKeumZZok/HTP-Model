@@ -41,7 +41,7 @@ def tree_print(image_path):
     # filenames = list(pathlib.Path('training').glob('*.index'))
 
     #recover our saved model
-    pipeline_config = 'fine_tuned_model/tree_pipeline.config'
+    pipeline_config = 'server/fine_tuned_model/tree_pipeline.config'
 
     # #generally you want to put the last ckpt from training in here
     # model_dir = str(filenames[-1]).replace('.index','')
