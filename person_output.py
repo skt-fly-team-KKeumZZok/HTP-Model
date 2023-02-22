@@ -41,7 +41,7 @@ def person_print(image_path):
     # filenames = list(pathlib.Path('training').glob('*.index'))
 
     #recover our saved model
-    pipeline_config = 'server/fine_tuned_model/person_pipeline.config'
+    pipeline_config = 'fine_tuned_model/person_pipeline.config'
 
     # #generally you want to put the last ckpt from training in here
     # model_dir = str(filenames[-1]).replace('.index','')
@@ -55,7 +55,7 @@ def person_print(image_path):
     ckpt = tf.compat.v2.train.Checkpoint(
         model=detection_model)
 
-    ckpt.restore('training\ckpt-P').expect_partial()
+    ckpt.restore('training/ckpt-P').expect_partial()
 
 
     # ckpt.restore(os.path.join(str(filenames[-1]).replace('.index','')))
