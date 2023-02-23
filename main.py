@@ -62,7 +62,7 @@ print('house_keyword: ', h_keyword, 'tree_keyword: ', t_keyword, 'person_keyword
 '''
 
 #---------------------server----------------------#
-import os, io, json, pymysql
+import os, io, json, pymysql, random
 from fastapi import FastAPI, HTTPException, File, UploadFile
 from datetime import datetime, date
 # from server.models import *
@@ -81,7 +81,7 @@ async def create_upload_file(image: UploadFile = File(...)):
     with Image.open(io.BytesIO(contents)) as img:
         img = img.convert("RGB") 
         day = datetime.now().date()
-        save_path = os.path.join(os.path.expanduser("~"), "server", "test_images", "image_house_" + str(day) + ".jpg")  
+        save_path = os.path.join(os.path.expanduser("~"), "server", "test_images", "house", "image_house_" + str(day) + ".jpg")  
         img.save(save_path, "JPEG")  
     return {"filename" : image.filename}
 
@@ -91,7 +91,7 @@ async def create_upload_file(image: UploadFile = File(...)):
     with Image.open(io.BytesIO(contents)) as img:
         img = img.convert("RGB") 
         day = datetime.now().date()
-        save_path = os.path.join(os.path.expanduser("~"), "server", "test_images", "image_tree" + str(day) + ".jpg")  
+        save_path = os.path.join(os.path.expanduser("~"), "server", "test_images", "tree", "image_tree_" + str(day) + ".jpg")  
         img.save(save_path, "JPEG")  
     return {"filename" : image.filename}
 
@@ -101,7 +101,7 @@ async def create_upload_file(image: UploadFile = File(...)):
     with Image.open(io.BytesIO(contents)) as img:
         img = img.convert("RGB")  
         day = datetime.now().date()
-        save_path = os.path.join(os.path.expanduser("~"), "server", "test_images", "image_person" + str(day) + ".jpg") 
+        save_path = os.path.join(os.path.expanduser("~"), "server", "test_images", "person", "image_person_" + str(day) + ".jpg") 
         img.save(save_path, "JPEG")  
     return {"filename" : image.filename}
 
@@ -132,12 +132,12 @@ async def main_test(user_id:int):
         # conn.close()
 
         # img를 서버에 /test_image 폴더에 저장하기
-        # h_img = 'test_images/house/image_house_' + str(day) + '.jpg'
-        # t_img = 'test_images/tree/image_tree_' + str(day) + '.jpg'
-        # p_img = 'test_images/person/image_person_' + str(day) + '.jpg'
-        h_img = 'test_images/house/reshape_test7.jpg'
-        t_img = 'test_images/person/test3.JPG'
-        p_img = 'test_images/tree/reshape_tree4.jpg'
+        h_img = 'test_images/house/image_house_' + str(day) + '.jpg'
+        t_img = 'test_images/tree/image_tree_' + str(day) + '.jpg'
+        p_img = 'test_images/person/image_person_' + str(day) + '.jpg'
+        # h_img = 'test_images/house/reshape_test7.jpg'
+        # t_img = 'test_images/person/test3.JPG'
+        # p_img = 'test_images/tree/reshape_tree4.jpg'
         
         # model 실행
         h_output, h_keyword, h_sentence, house_size_value, window_size_value, chimney_value = house_output.house_print(h_img)
@@ -191,5 +191,22 @@ async def main_test(user_id:int):
 #     sql = f"SELECT * FROM DRAW_REPORT WHERE userid = {userid} AND day = '{testday}';"
 #     db.execute(sql)
 #     result = db.fetchall()
-
+#     
 #     return result
+
+@app.get("/report/keyword/{user_id}")
+async def recommand_keyword(user_id: int):
+    userid = user_id
+    day = day = datetime.now().date()
+    # day = '2023-02-22'
+    sql_recommend = f"SELECT keyword FROM TALK_REPORT WHERE userid = {userid} AND day = '{day}';"
+    db.execute(sql_recommend)
+    keyword = db.fetchone()
+    
+    keyword_list = str(keyword[0]).split(',')
+    if '8' in keyword_list:
+       keyword_list.remove('8')
+    
+    result = random.choice(keyword_list)
+
+    return int(result)
