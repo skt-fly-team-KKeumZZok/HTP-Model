@@ -54,3 +54,8 @@ class CHATTING(BaseModel):
 class DRAW_RESULT(BaseModel):
     userid: int
     sentence: str
+
+class KEYWORD(BaseModel):
+    userid: int
+    day: date
+    keyword_index: str

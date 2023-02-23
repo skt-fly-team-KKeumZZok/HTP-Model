@@ -1,16 +1,16 @@
 import numpy as np
 import skfuzzy as fuzz
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 #----------type1----------#
 
 class fuzzy_type1:
 
     def __init__(self):
-        self.x_house_size = np.arange(0, 100, 1) # house_size/a4_size*100
-        self.x_head_size = np.arange(0, 100, 1) # head_long/person_long*100
-        self.x_nose_size = np.arange(0, 100, 1) # nose_size/nose_size*100
-        self.x_window_size = np.arange(0, 100, 1) # window_size/house_size*100
+        self.x_house_size = np.arange(0, 101, 1) # house_size/a4_size*100
+        self.x_head_size = np.arange(0, 101, 1) # head_long/person_long*100
+        self.x_nose_size = np.arange(0, 101, 1) # nose_size/nose_size*100
+        self.x_window_size = np.arange(0, 101, 1) # window_size/house_size*100
         self.x_chimney = np.arange(0, 2, 0.02)
         self.x_nose = np.arange(0, 2, 0.02)
 
@@ -425,9 +425,9 @@ class fuzzy_type2:
 class fuzzy_type3:
 
     def __init__(self):
-        self.x_tree_size = np.arange(0, 100, 1)
-        self.x_trunk_size = np. arange(0, 100, 1)
-        self.x_nose_size = np.arange(0, 100, 1)
+        self.x_tree_size = np.arange(0, 101, 1)
+        self.x_trunk_size = np. arange(0, 101, 1)
+        self.x_nose_size = np.arange(0, 101, 1)
 
         # tree size value
         self.tree_size_low = fuzz.trapmf(self.x_tree_size, [0, 0, 25, 40])

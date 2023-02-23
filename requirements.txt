@@ -29,4 +29,5 @@ immutabledict
 fastapi
 uvicorn[standard]
 scikit-fuzzy
-
+pymysql
+python-multipart

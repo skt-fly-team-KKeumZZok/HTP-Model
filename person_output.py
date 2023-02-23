@@ -55,7 +55,7 @@ def person_print(image_path):
     ckpt = tf.compat.v2.train.Checkpoint(
         model=detection_model)
 
-    ckpt.restore('training\ckpt-P').expect_partial()
+    ckpt.restore('training/ckpt-P').expect_partial()
 
 
     # ckpt.restore(os.path.join(str(filenames[-1]).replace('.index','')))
