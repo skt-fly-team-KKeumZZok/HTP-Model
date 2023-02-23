@@ -191,7 +191,7 @@ async def main_test(user_id:int):
 #     sql = f"SELECT * FROM DRAW_REPORT WHERE userid = {userid} AND day = '{testday}';"
 #     db.execute(sql)
 #     result = db.fetchall()
-#     
+    
 #     return result
 
 @app.get("/report/keyword/{user_id}")
