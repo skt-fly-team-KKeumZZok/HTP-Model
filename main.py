@@ -132,12 +132,12 @@ async def main_test(user_id:int):
         # conn.close()
 
         # img를 서버에 /test_image 폴더에 저장하기
-        h_img = 'test_images/house/image_house_' + str(day) + '.jpg'
-        t_img = 'test_images/tree/image_tree_' + str(day) + '.jpg'
-        p_img = 'test_images/person/image_person_' + str(day) + '.jpg'
-        # h_img = 'test_images/house/reshape_test7.jpg'
-        # t_img = 'test_images/person/test3.JPG'
-        # p_img = 'test_images/tree/reshape_tree4.jpg'
+        # h_img = 'test_images/house/image_house_' + str(day) + '.jpg'
+        # t_img = 'test_images/tree/image_tree_' + str(day) + '.jpg'
+        # p_img = 'test_images/person/image_person_' + str(day) + '.jpg'
+        h_img = 'test_images/house/reshape_test7.jpg'
+        t_img = 'test_images/person/test3.JPG'
+        p_img = 'test_images/tree/reshape_tree4.jpg'
         
         # model 실행
         h_output, h_keyword, h_sentence, house_size_value, window_size_value, chimney_value = house_output.house_print(h_img)
@@ -182,6 +182,7 @@ async def main_test(user_id:int):
         conn.close()
 
     # return result
+    return "HTP 보고서 생성 완료"
 
 # @app.post("/report/{user_id}/{testday}")
 # async def show_report(user_id:int, testday:date):
@@ -192,9 +193,3 @@ async def main_test(user_id:int):
 #     result = db.fetchall()
 
 #     return result
-
-
-
-
-
-    
