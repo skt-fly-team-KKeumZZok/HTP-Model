@@ -246,7 +246,7 @@ async def main_test(user_id:int):
         conn.close()
 
     # return result
-    return "HTP 보고서 생성 완료"
+    return {'msg' : 'HTP 보고서 생성 완료'}
 
 # @app.post("/report/{user_id}/{testday}")
 # async def show_report(user_id:int, testday:date):
