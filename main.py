@@ -132,7 +132,13 @@ async def main_test(user_id:int):
         db.execute(sql_day)
         first_day = db.fetchall()
 
-        if str(first_day) == str(day):
+        day_list = []
+        for i in range(len(first_day)):
+            day_list.append(str(first_day[i][0]))
+        
+        print(day_list)
+
+        if str(day) in day_list:
             sql_date = f"UPDATE USER_TESTDAY SET day = '{day}' WHERE userid = {userid};"
             db.execute(sql_date)
             conn.commit()
