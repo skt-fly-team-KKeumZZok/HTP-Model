@@ -261,7 +261,7 @@ async def main_test(user_id:int):
 @app.get("/report/keyword/{user_id}")
 async def recommand_keyword(user_id: int):
     userid = user_id
-    day = day = datetime.now().date()
+    day = datetime.now().date()
     # day = '2023-02-22'
     sql_recommend = f"SELECT keyword FROM TALK_REPORT WHERE userid = {userid} AND day = '{day}';"
     db.execute(sql_recommend)
@@ -270,7 +270,7 @@ async def recommand_keyword(user_id: int):
     keyword_list = str(keyword[0]).split(',')
     if '8' in keyword_list:
        keyword_list.remove('8')
-    
+
     result = random.choice(keyword_list)
 
-    return int(result)
+    return {'result' : int(result)}
