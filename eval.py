@@ -95,7 +95,7 @@ def cordinate_iou():
 
     # image load
     xy_list = []
-    for raw_record in dataset.take(1):
+    for raw_record in dataset:
  
         example = tf.io.parse_single_example(raw_record, feature_description)
 
@@ -122,9 +122,11 @@ def cordinate_iou():
                 min_score_thresh=.5,
                 agnostic_mode=False
                 )
+        
         score = detections['detection_scores'][0].numpy()
         top_score = score[score > 0.5]
         box_cnt = len(top_score)
+        top_classes = detections['detection_classes'][0][:box_cnt].numpy()
         top_boxes = detections['detection_boxes'][0][:box_cnt].numpy()
 
         xy = []
@@ -140,7 +142,12 @@ def cordinate_iou():
 
         xy_list.append(xy)
 
-    return xy_list
+        print(top_classes)
+        print(xy_list)
+
+    # return xy_list
+
+
 
 #-------------------------------------------------------#
 
@@ -156,8 +163,8 @@ feature_description = {
     'image/object/bbox/xmax': tf.io.VarLenFeature(tf.float32),
     'image/object/bbox/ymax': tf.io.VarLenFeature(tf.float32),
     'image/object/class/text': tf.io.VarLenFeature(tf.string),
-    'image/object/class/label': tf.io.VarLenFeature(tf.int64),
-}
+    'image/object/class/label': tf.io.VarLenFeature(tf.int64)}
+
 
 # Parse a single example from the dataset
 iou_list = []
@@ -180,26 +187,28 @@ for row in dataset:
     xmax = tf.sparse.to_dense(example['image/object/bbox/xmax']).numpy()
     ymax = tf.sparse.to_dense(example['image/object/bbox/ymax']).numpy()
 
+    label = tf.sparse.to_dense(example['image/object/class/label']).numpy()
+    print(label)
+
     # Print the coordinates
     true_box = []
-    plt.figure()
-    currentAxis = plt.gca()
+    # plt.figure()
+    # currentAxis = plt.gca()
     for i in range(len(xmin)):
         true_box.append([xmin[i], ymin[i], xmax[i], ymax[i]])
-        currentAxis.add_patch(
-        patches.Rectangle(
-            (xmin[i], ymin[i]),                                   # (x, y)
-            xmax[i]-xmin[i], ymax[i]-ymin[i],                     # width, height
-            edgecolor = 'deeppink',
-            facecolor = 'lightgray',
-            fill=False
-        ))
+        # currentAxis.add_patch(
+        # patches.Rectangle(
+        #     (xmin[i], ymin[i]),                                   # (x, y)
+        #     xmax[i]-xmin[i], ymax[i]-ymin[i],                     # width, height
+        #     edgecolor = 'deeppink',
+        #     facecolor = 'lightgray',
+        #     fill=False
+        # ))
 
-    plt.show()
-
-    
-    """
-    pred_box = cordinate_iou()
+    # plt.show()
+    print(true_box)
+    # pred_box = cordinate_iou()
+    # print(pred_box)
 
     for i in range(len(true_box)):
         iou = IoU(pred_box[k][i], true_box[i])
@@ -208,6 +217,6 @@ for row in dataset:
     k += 1
 
 print(iou_list)
-"""
 
+cordinate_iou()
 
