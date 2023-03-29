@@ -39,36 +39,37 @@ def get_keyword(output):
     return keyword_result
 
 
-'''
+
 # type1 = [house_size_value, head_size_value, nose_size_value, window_size_value, chimney_value, nose_value]
 # type2 = [root_exist_value, slub_exist_value, legs_exist_value]
 # type3 = [tree_size_value, trunk_size_value, nose_size_value]
-
+'''
 h_output, h_keyword, h_sentence, house_size_value, window_size_value, chimney_value = house_output.house_print('test_images/house/reshape_test3.jpg')
-t_output, t_keyword, t_sentence, root_exist_value, slub_exist_value, tree_size_value, trunk_size_value = tree_output.tree_print('test_images/tree/reshape_tree1.jpg')
-p_output, p_keyword, p_sentence, head_size_value, nose_value, legs_exist_value, nose_size_value = person_output.person_print('test_images\person\KakaoTalk_20230218_140105547.jpg')
+# t_output, t_keyword, t_sentence, root_exist_value, slub_exist_value, tree_size_value, trunk_size_value = tree_output.tree_print('test_images/tree/reshape_tree1.jpg')
+# p_output, p_keyword, p_sentence, head_size_value, nose_value, legs_exist_value, nose_size_value = person_output.person_print('test_images\person\KakaoTalk_20230218_140105547.jpg')
 
 #--------fuzzy output--------#
-f_type1 = fuzzy.fuzzy_type1()
-type1_result = f_type1.make_decision(house_size_value, head_size_value, nose_size_value, window_size_value, chimney_value, nose_value)
-f_type2 = fuzzy.fuzzy_type2()
-type2_result = f_type2.make_decision(root_exist_value, slub_exist_value, legs_exist_value)
-f_type3 = fuzzy.fuzzy_type3()
-type3_result = f_type3.make_decision(tree_size_value, trunk_size_value, nose_size_value)
+# f_type1 = fuzzy.fuzzy_type1()
+# type1_result = f_type1.make_decision(house_size_value, head_size_value, nose_size_value, window_size_value, chimney_value, nose_value)
+# f_type2 = fuzzy.fuzzy_type2()
+# type2_result = f_type2.make_decision(root_exist_value, slub_exist_value, legs_exist_value)
+# f_type3 = fuzzy.fuzzy_type3()
+# type3_result = f_type3.make_decision(tree_size_value, trunk_size_value, nose_size_value)
 
-print('type1: %.2f%%, type2: %.2f%%, type3: %.2f%%' % (type1_result, type2_result, type3_result))
-print('draw report index: ', draw_result_index(h_output, t_output, p_output))
-print('house_keyword: ', h_keyword, 'tree_keyword: ', t_keyword, 'person_keyword: ', p_keyword, sep='\n')
+# print('type1: %.2f%%, type2: %.2f%%, type3: %.2f%%' % (type1_result, type2_result, type3_result))
+# print('draw report index: ', draw_result_index(h_output, t_output, p_output))
+# print('house_keyword: ', h_keyword, 'tree_keyword: ', t_keyword, 'person_keyword: ', p_keyword, sep='\n')
 '''
 
 #---------------------server----------------------#
-import os, io, json, pymysql
+import os, io, json, pymysql, random
 from fastapi import FastAPI, HTTPException, File, UploadFile
 from datetime import datetime, date
 # from server.models import *
 from typing import List
 from uuid import UUID 
 from PIL import Image
+# IP : 34.64.220.65
 
 app = FastAPI()
 conn = pymysql.connect(host='jaminidb2.mysql.database.azure.com', user='sktflyaiambition4', password='rmaWhrdl8!', db='jamini', charset='utf8', ssl={"fake_flag_to_enable_tls":True})
@@ -81,7 +82,7 @@ async def create_upload_file(image: UploadFile = File(...)):
     with Image.open(io.BytesIO(contents)) as img:
         img = img.convert("RGB") 
         day = datetime.now().date()
-        save_path = os.path.join(os.path.expanduser("~"), "server", "test_images", "image_house_" + str(day) + ".jpg")  
+        save_path = os.path.join(os.path.expanduser("~"), "server", "test_images", "house", "image_house_" + str(day) + ".jpg")  
         img.save(save_path, "JPEG")  
     return {"filename" : image.filename}
 
@@ -91,7 +92,7 @@ async def create_upload_file(image: UploadFile = File(...)):
     with Image.open(io.BytesIO(contents)) as img:
         img = img.convert("RGB") 
         day = datetime.now().date()
-        save_path = os.path.join(os.path.expanduser("~"), "server", "test_images", "image_tree" + str(day) + ".jpg")  
+        save_path = os.path.join(os.path.expanduser("~"), "server", "test_images", "tree", "image_tree_" + str(day) + ".jpg")  
         img.save(save_path, "JPEG")  
     return {"filename" : image.filename}
 
@@ -101,18 +102,20 @@ async def create_upload_file(image: UploadFile = File(...)):
     with Image.open(io.BytesIO(contents)) as img:
         img = img.convert("RGB")  
         day = datetime.now().date()
-        save_path = os.path.join(os.path.expanduser("~"), "server", "test_images", "image_person" + str(day) + ".jpg") 
+        save_path = os.path.join(os.path.expanduser("~"), "server", "test_images", "person", "image_person_" + str(day) + ".jpg") 
         img.save(save_path, "JPEG")  
     return {"filename" : image.filename}
 
 
 @app.get("/model/{user_id}")
 async def main_test(user_id:int):
+    conn = pymysql.connect(host='jaminidb2.mysql.database.azure.com', user='sktflyaiambition4', password='rmaWhrdl8!', db='jamini', charset='utf8', ssl={"fake_flag_to_enable_tls":True})
+    db = conn.cursor()
     try:
         userid = user_id
-        sql_id = f"SELECT userid FROM USER;"
-        db.execute(sql_id)
-        db_id = db.fetchall()
+        # sql_id = f"SELECT userid FROM USER;"
+        # db.execute(sql_id)
+        # db_id = db.fetchall()
             
         # # db:USER에 저장된 userid인지 확인
         # user_list = []
@@ -125,19 +128,33 @@ async def main_test(user_id:int):
         # 테스트 한 날짜를 db:USER_TESTDAY에 저장
         day = datetime.now().date()
 
-        # sql_date = f"INSERT INTO USER_TESTDAY VALUES(\"{userid}\", \"{day}\");"
-        sql_date = f"UPDATE USER_TESTDAY SET day = '{day}' WHERE userid = {user_id};"
-        db.execute(sql_date)
-        conn.commit()
+        # user가 오늘 test한지 확인
+        sql_day1 = f"SELECT day FROM USER_TESTDAY WHERE userid = {userid};"
+        db.execute(sql_day1)
+        first_day1 = db.fetchall()
+
+        day_list1 = []
+        for i in range(len(first_day1)):
+            day_list1.append(str(first_day1[i][0]))
+
+        if str(day) not in day_list1:
+            sql_date = f"INSERT INTO USER_TESTDAY VALUES(\"{userid}\", \"{day}\");"
+            db.execute(sql_date)
+            conn.commit()
+
+        
+        # sql_date = f"UPDATE USER_TESTDAY SET day = '{day}' WHERE userid = {userid};"
+        # db.execute(sql_date)
+        # conn.commit()
         # conn.close()
 
         # img를 서버에 /test_image 폴더에 저장하기
-        # h_img = 'test_images/house/image_house_' + str(day) + '.jpg'
-        # t_img = 'test_images/tree/image_tree_' + str(day) + '.jpg'
-        # p_img = 'test_images/person/image_person_' + str(day) + '.jpg'
-        h_img = 'test_images/house/reshape_test7.jpg'
-        t_img = 'test_images/person/test3.JPG'
-        p_img = 'test_images/tree/reshape_tree4.jpg'
+        h_img = 'test_images/house/image_house_' + str(day) + '.jpg'
+        t_img = 'test_images/tree/image_tree_' + str(day) + '.jpg'
+        p_img = 'test_images/person/image_person_' + str(day) + '.jpg'
+        # h_img = 'test_images/house/reshape_test7.jpg'
+        # t_img = 'test_images/person/test3.JPG'
+        # p_img = 'test_images/tree/reshape_tree4.jpg'
         
         # model 실행
         h_output, h_keyword, h_sentence, house_size_value, window_size_value, chimney_value = house_output.house_print(h_img)
@@ -153,10 +170,24 @@ async def main_test(user_id:int):
         
         # db:KEYWORD에 결과 넣기
         keyword = get_keyword(h_keyword+t_keyword+p_keyword)
-        # sql_keyword = f"INSERT INTO KEYWORD VALUES(\"{userid}\", \"{day}\", \"{keyword}\");"
-        sql_keyword = f"UPDATE KEYWORD SET keyword_index = '{keyword}' WHERE userid = {user_id} AND day = '{day}';"
-        db.execute(sql_keyword)
-        conn.commit()
+
+        sql_day2 = f"SELECT day FROM KEYWORD WHERE userid = {userid};"
+        db.execute(sql_day2)
+        first_day2 = db.fetchall()
+
+        day_list2 = []
+        for i in range(len(first_day2)):
+            day_list2.append(str(first_day2[i][0]))
+
+        if str(day) in day_list2:
+            # sql_keyword = f"INSERT INTO KEYWORD VALUES(\"{userid}\", \"{day}\", \"{keyword}\");"
+            sql_keyword = f"UPDATE KEYWORD SET keyword_index = '{keyword}' WHERE userid = {userid} AND day = '{day}';"
+            db.execute(sql_keyword)
+            conn.commit()
+        else:
+            sql_keyword = f"INSERT INTO KEYWORD VALUES(\"{userid}\", \"{day}\", \"{keyword}\");"
+            db.execute(sql_keyword)
+            conn.commit()
         
         # model의 output 중 reult_report_index의 값으로 db:RAW_RESULT 값을 가져와 result라는 변수로 저장
         result_index = draw_result_index(h_output, t_output, p_output)
@@ -170,19 +201,34 @@ async def main_test(user_id:int):
             if draw_report[i-1][0]:
                 db_result += draw_report[i-1][0]
 
+        sql_day3 = f"SELECT day FROM DRAW_REPORT WHERE userid = {userid};"
+        db.execute(sql_day3)
+        first_day3 = db.fetchall()
 
-        # db:DRAW_REPORT에 model의 결과 넣기
-        # sql_report= f"INSERT INTO DRAW_REPORT VALUES(\"{userid}\", \"{day}\", \"{h_img}\", \"{t_img}\", \"{p_img}\", \"{db_result}\", \"{h_sentence}\", \"{t_sentence}\", \"{p_sentence}\", \"{type1_result}\", \"{type2_result}\", \"{type3_result}\");"
-        sql_report= f"UPDATE DRAW_REPORT SET house_img = '{h_img}', tree_img = '{t_img}', person_img = '{p_img}', result = '{db_result}', house_text = '{h_sentence}', tree_text = '{t_sentence}', person_text = '{p_sentence}', f_type1 = {type1_result}, f_type2 = {type2_result}, f_type3 = {type3_result} WHERE userid = {user_id} AND day = '{day}';"
-        db.execute(sql_report)
-        conn.commit()
-        # conn.close()
+        day_list3 = []
+        for i in range(len(first_day3)):
+            day_list3.append(str(first_day3[i][0]))
+
+        if str(day) in day_list3:
+            # db:DRAW_REPORT에 model의 결과 넣기
+            # sql_report= f"INSERT INTO DRAW_REPORT VALUES(\"{userid}\", \"{day}\", \"{h_img}\", \"{t_img}\", \"{p_img}\", \"{db_result}\", \"{h_sentence}\", \"{t_sentence}\", \"{p_sentence}\", \"{type1_result}\", \"{type2_result}\", \"{type3_result}\");"
+            sql_report= f"UPDATE DRAW_REPORT SET house_img = '{h_img}', tree_img = '{t_img}', person_img = '{p_img}', result = '{db_result}', house_text = '{h_sentence}', tree_text = '{t_sentence}', person_text = '{p_sentence}', f_type1 = {type1_result}, f_type2 = {type2_result}, f_type3 = {type3_result} WHERE userid = {userid} AND day = '{day}';"
+            db.execute(sql_report)
+            conn.commit()
+            # conn.close()
+
+        else:
+            # db:DRAW_REPORT에 model의 결과 넣기
+            sql_report= f"INSERT INTO DRAW_REPORT VALUES(\"{userid}\", \"{day}\", \"{h_img}\", \"{t_img}\", \"{p_img}\", \"{db_result}\", \"{h_sentence}\", \"{t_sentence}\", \"{p_sentence}\", \"{type1_result}\", \"{type2_result}\", \"{type3_result}\");"
+            db.execute(sql_report)
+            conn.commit()
+            # conn.close()
 
     finally:
         conn.close()
 
     # return result
-    return "HTP 보고서 생성 완료"
+    return {'msg' : 'HTP 보고서 생성 완료'}
 
 # @app.post("/report/{user_id}/{testday}")
 # async def show_report(user_id:int, testday:date):
@@ -191,5 +237,22 @@ async def main_test(user_id:int):
 #     sql = f"SELECT * FROM DRAW_REPORT WHERE userid = {userid} AND day = '{testday}';"
 #     db.execute(sql)
 #     result = db.fetchall()
-
+    
 #     return result
+
+@app.get("/report/keyword/{user_id}")
+async def recommand_keyword(user_id: int):
+    userid = user_id
+    day = datetime.now().date()
+    # day = '2023-02-22'
+    sql_recommend = f"SELECT keyword FROM TALK_REPORT WHERE userid = {userid} AND day = '{day}';"
+    db.execute(sql_recommend)
+    keyword = db.fetchone()
+    
+    keyword_list = str(keyword[0]).split(',')
+    if '8' in keyword_list:
+       keyword_list.remove('8')
+
+    result = random.choice(keyword_list)
+
+    return {'result' : int(result)}
